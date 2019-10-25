@@ -5,6 +5,7 @@ Backend development best practices
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Translations of this document](#translations-of-this-document)
 - [N Commandments](#n-commandments)
 - [General points on guidelines](#general-points-on-guidelines)
 - [Development environment setup in README.md](#development-environment-setup-in-readmemd)
@@ -25,6 +26,7 @@ Backend development best practices
   - [Production environment](#production-environment)
 - [Bill of Materials](#bill-of-materials)
 - [Security](#security)
+  - [Docker](#docker)
   - [Credentials](#credentials)
   - [Secrets](#secrets)
   - [Login Throttling](#login-throttling)
@@ -43,13 +45,19 @@ Backend development best practices
   - [Load balancer health checks](#load-balancer-health-checks)
   - [Access control](#access-control)
 - [Checklists](#checklists)
-    - [Responsibility checklist](#responsibility-checklist)
-    - [Release checklist](#release-checklist)
+  - [Responsibility checklist](#responsibility-checklist)
+  - [Release checklist](#release-checklist)
 - [General questions to consider](#general-questions-to-consider)
 - [Generally proven useful tools](#generally-proven-useful-tools)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Translations of this document
+
+These are community-provided translations of this document. If you have comments regarding a particular translation, please approach the translation's maintainer.
+
+- [Turkish](https://github.com/umutphp/backend-best-practices) translation by [umutphp](https://github.com/umutphp)
 
 # N Commandments
 
@@ -111,7 +119,6 @@ Stores documents that can be easily addressed and searched for by content or by 
 
 * CouchDB
 * ElasticSearch
-* MongoDB
 
 > Note that since 9.4, PostgreSQL can also be used to store JSON natively.
 
@@ -120,6 +127,7 @@ Stores documents that can be easily addressed and searched for by content or by 
 Stores values, or sometimes groups of key-value pairs, accessible by key. Considers the values to be simply blobs, so does not provide the query capabilities of document stores. Scalable to immense sizes. Notable examples:
 
 * Cassandra
+* Redis
 
 #### Graph database
 
@@ -171,6 +179,16 @@ This document must be included in every build artifact and shall contain the fol
 Be aware of possible security threats and problems. You should at least be familiar with the [OWASP Top 10 vulnerabilities](https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project), and you should of monitor vulnerabilities in any third party software you use.
 
 Good generic security guidelines would be:
+
+## Docker
+
+**Using Docker will not make your service more secure.** Generally, you should consider at least following things if using Docker:
+
+- Don't run any untrusted binaries inside Docker containers
+- Create unprivileged users inside Docker containers and run binaries using unprivileged user instead of root whenever possible
+- Periodically rebuild and redeploy your containers with updated libraries and dependencies
+- Periodically update (or rebuild) your Docker hosts with latest security updates
+- Multiple containers running on same host will by default have some level of access to other containers and the host itself. Properly secure all hosts, and run containers with a minimum set of capabilities, for example preventing network access if they don't need it.
 
 ## Credentials
 
